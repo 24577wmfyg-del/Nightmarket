@@ -4,20 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>台灣夜市冒險</title>
-<link rel="stylesheet" href="style.css">
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#fff8e8;
+text-align:center;
+padding:40px;
+}
+.container{
+max-width:700px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+button{
+padding:12px 20px;
+margin:10px;
+border:none;
+border-radius:10px;
+background:#ff8800;
+color:white;
+font-size:16px;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <h1>台灣夜市冒險</h1>
+<h1>台灣夜市冒險</h1>
 
-    <div id="story">
-        <p>歡迎來到台灣夜市！你是一位第一次來台灣的交換學生。</p>
-        <button onclick="startGame()">開始遊戲</button>
-    </div>
+<div id="story">
+<p>歡迎來到台灣夜市！你是一位第一次來台灣的交換學生。</p>
+<button onclick="startGame()">開始遊戲</button>
+</div>
 </div>
 
-<script src="script.js"></script>
+<script>
+function startGame(){
+document.getElementById("story").innerHTML=
+'<p>你來到熱鬧的夜市，想先吃什麼？</p><button onclick="tofu()">臭豆腐</button><button onclick="tea()">珍珠奶茶</button>';
+}
+
+function tofu(){
+document.getElementById("story").innerHTML=
+'<p>你鼓起勇氣吃了臭豆腐。</p><button onclick="chat()">和老闆聊天</button><button onclick="alone()">自己逛夜市</button>';
+}
+
+function tea(){
+document.getElementById("story").innerHTML=
+'<p>你買了一杯珍珠奶茶。</p><button onclick="chat()">和老闆聊天</button><button onclick="alone()">自己逛夜市</button>';
+}
+
+function chat(){
+document.getElementById("story").innerHTML=
+'<h2>文化探索者結局</h2><p>你學到了許多夜市文化！</p><button onclick="location.reload()">重新開始</button>';
+}
+
+function alone(){
+document.getElementById("story").innerHTML=
+'<h2>夜市達人結局</h2><p>你找到許多隱藏美食！</p><button onclick="location.reload()">重新開始</button>';
+}
+</script>
 
 </body>
 </html>
