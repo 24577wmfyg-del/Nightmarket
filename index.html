@@ -4,134 +4,130 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>台灣夜市文化冒險</title>
+
 <style>
 body{
-font-family:Arial,sans-serif;
-background:#fff8e8;
-padding:20px;
-text-align:center;
+    font-family:Arial,sans-serif;
+    background:#fff8e8;
+    text-align:center;
+    padding:20px;
 }
 
 .container{
-max-width:800px;
-margin:auto;
-background:white;
-padding:30px;
-border-radius:15px;
-box-shadow:0 0 15px rgba(0,0,0,.2);
-}
-
-h1{
-color:#ff6600;
+    max-width:800px;
+    margin:auto;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(0,0,0,0.2);
 }
 
 button{
-padding:12px 20px;
-margin:10px;
-border:none;
-border-radius:10px;
-background:#ff8800;
-color:white;
-font-size:16px;
-cursor:pointer;
+    background:#ff8800;
+    color:white;
+    border:none;
+    padding:12px 20px;
+    margin:10px;
+    border-radius:10px;
+    font-size:18px;
 }
 
 button:hover{
-background:#ff6600;
+    background:#ff6600;
 }
 
-img{
-width:100%;
-max-width:500px;
-border-radius:10px;
-margin:15px 0;
+h1{
+    color:#cc5500;
 }
 </style>
+
 </head>
+<body>
+
 <div class="container">
-<h1>台灣夜市文化冒險</h1>
+    <h1>台灣夜市文化冒險</h1>
+
+    <div id="game">
+        <p>
+        歡迎來到台灣！你是一位來台交換學生，
+        想透過夜市了解台灣文化。
+        </p>
+
+        <button onclick="startGame()">開始冒險</button>
+    </div>
+</div>
+
 <script>
 
-let score=0;
+let score = 0;
 
 function startGame(){
-
 document.getElementById("game").innerHTML=`
-
-<h2>第一關：晚餐吃什麼？</h2>
-
-<p>來到夜市後，你最想嘗試什麼？</p>
-
-<button onclick="food1()">臭豆腐</button>
-
-<button onclick="food2()">大腸包小腸</button>
-
-<button onclick="food3()">珍珠奶茶</button>
-
+<h2>第一站：選擇夜市</h2>
+<button onclick="night1()">士林夜市</button>
+<button onclick="night2()">逢甲夜市</button>
+<button onclick="night3()">六合夜市</button>
 `;
 }
 
-function food1(){
-score+=2;
-stage2();
-}
-
-function food2(){
-score+=3;
-stage2();
-}
-
-function food3(){
-score+=1;
-stage2();
-}
-
-function stage2(){
-
+function night1(){
+score += 10;
 document.getElementById("game").innerHTML=`
-
-<h2>第二關：和老闆互動</h2>
-
-<p>老闆問你：「好吃嗎？」</p>
-
-<button onclick="talk1()">用中文回答</button>
-
-<button onclick="talk2()">用英文回答</button>
-
+<h2>士林夜市</h2>
+<p>你看到臭豆腐和大腸包小腸。</p>
+<button onclick="food()">了解美食文化</button>
 `;
-
 }
 
-function talk1(){
-score+=3;
-quiz();
+function night2(){
+score += 10;
+document.getElementById("game").innerHTML=`
+<h2>逢甲夜市</h2>
+<p>你看到創意小吃與特色飲料。</p>
+<button onclick="food()">了解美食文化</button>
+`;
 }
 
-function talk2(){
-score+=1;
-quiz();
+function night3(){
+score += 10;
+document.getElementById("game").innerHTML=`
+<h2>六合夜市</h2>
+<p>你看到海鮮與高雄特色料理。</p>
+<button onclick="food()">了解美食文化</button>
+`;
+}
+
+function food(){
+document.getElementById("game").innerHTML=`
+<h2>文化學習</h2>
+
+<p>
+臭豆腐是台灣知名街頭小吃，
+經過發酵製作而成。
+</p>
+
+<p>
+蚵仔煎則展現台灣沿海飲食文化，
+是許多觀光客必吃的夜市料理。
+</p>
+
+<button onclick="quiz()">進行小測驗</button>
+`;
 }
 
 function quiz(){
-
 document.getElementById("game").innerHTML=`
+<h2>小測驗</h2>
 
-<h2>第三關：文化挑戰</h2>
+<p>臭豆腐最大的特色是什麼？</p>
 
-<p>珍珠奶茶最早起源於哪裡？</p>
-
-<button onclick="correct()">台灣</button>
-
-<button onclick="wrong()">日本</button>
-
-<button onclick="wrong()">韓國</button>
-
+<button onclick="correct()">發酵製作</button>
+<button onclick="wrong()">冷凍製作</button>
 `;
-
 }
 
 function correct(){
-score+=3;
+score += 20;
 ending();
 }
 
@@ -143,46 +139,31 @@ function ending(){
 
 let result="";
 
-if(score>=8){
-
-result=`
-<h2>🏆 夜市文化大師</h2>
-<p>你非常了解台灣夜市文化！</p>
-`;
-
+if(score>=30){
+result="夜市文化達人";
 }
-
-else if(score>=6){
-
-result=`
-<h2>🍢 美食達人</h2>
-<p>你發現了許多夜市美食。</p>
-`;
-
-}
-
-else if(score>=4){
-
-result=`
-<h2>🎒 文化探索者</h2>
-<p>你對台灣文化產生濃厚興趣。</p>
-`;
-
-}
-
 else{
-
-result=`
-<h2>😆 普通觀光客</h2>
-<p>雖然有點迷路，但玩得很開心。</p>
-`;
-
+result="夜市文化新手";
 }
 
-document.getElementById("game").innerHTML=
-result+
-`<br><button onclick="location.reload()">重新開始</button>`;
+document.getElementById("game").innerHTML=`
+<h2>遊戲結束</h2>
 
+<p>你的分數：${score}</p>
+
+<h3>${result}</h3>
+
+<p>
+恭喜完成台灣夜市文化冒險！
+透過夜市美食與文化學習，
+更了解台灣的在地特色。
+</p>
+
+<button onclick="location.reload()">重新開始</button>
+`;
 }
 
 </script>
+
+</body>
+</html>
