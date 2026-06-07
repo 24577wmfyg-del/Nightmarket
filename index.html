@@ -3,23 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台灣夜市冒險</title>
-
+<title>台灣夜市文化冒險</title>
 <style>
 body{
 font-family:Arial,sans-serif;
 background:#fff8e8;
+padding:20px;
 text-align:center;
-padding:40px;
 }
+
 .container{
-max-width:700px;
+max-width:800px;
 margin:auto;
 background:white;
 padding:30px;
 border-radius:15px;
-box-shadow:0 0 10px rgba(0,0,0,.2);
+box-shadow:0 0 15px rgba(0,0,0,.2);
 }
+
+h1{
+color:#ff6600;
+}
+
 button{
 padding:12px 20px;
 margin:10px;
@@ -28,47 +33,156 @@ border-radius:10px;
 background:#ff8800;
 color:white;
 font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff6600;
+}
+
+img{
+width:100%;
+max-width:500px;
+border-radius:10px;
+margin:15px 0;
 }
 </style>
 </head>
-
-<body>
-
 <div class="container">
-<h1>台灣夜市冒險</h1>
-
-<div id="story">
-<p>歡迎來到台灣夜市！你是一位第一次來台灣的交換學生。</p>
-<button onclick="startGame()">開始遊戲</button>
-</div>
-</div>
-
+<h1>台灣夜市文化冒險</h1>
 <script>
+
+let score=0;
+
 function startGame(){
-document.getElementById("story").innerHTML=
-'<p>你來到熱鬧的夜市，想先吃什麼？</p><button onclick="tofu()">臭豆腐</button><button onclick="tea()">珍珠奶茶</button>';
+
+document.getElementById("game").innerHTML=`
+
+<h2>第一關：晚餐吃什麼？</h2>
+
+<p>來到夜市後，你最想嘗試什麼？</p>
+
+<button onclick="food1()">臭豆腐</button>
+
+<button onclick="food2()">大腸包小腸</button>
+
+<button onclick="food3()">珍珠奶茶</button>
+
+`;
 }
 
-function tofu(){
-document.getElementById("story").innerHTML=
-'<p>你鼓起勇氣吃了臭豆腐。</p><button onclick="chat()">和老闆聊天</button><button onclick="alone()">自己逛夜市</button>';
+function food1(){
+score+=2;
+stage2();
 }
 
-function tea(){
-document.getElementById("story").innerHTML=
-'<p>你買了一杯珍珠奶茶。</p><button onclick="chat()">和老闆聊天</button><button onclick="alone()">自己逛夜市</button>';
+function food2(){
+score+=3;
+stage2();
 }
 
-function chat(){
-document.getElementById("story").innerHTML=
-'<h2>文化探索者結局</h2><p>你學到了許多夜市文化！</p><button onclick="location.reload()">重新開始</button>';
+function food3(){
+score+=1;
+stage2();
 }
 
-function alone(){
-document.getElementById("story").innerHTML=
-'<h2>夜市達人結局</h2><p>你找到許多隱藏美食！</p><button onclick="location.reload()">重新開始</button>';
+function stage2(){
+
+document.getElementById("game").innerHTML=`
+
+<h2>第二關：和老闆互動</h2>
+
+<p>老闆問你：「好吃嗎？」</p>
+
+<button onclick="talk1()">用中文回答</button>
+
+<button onclick="talk2()">用英文回答</button>
+
+`;
+
 }
+
+function talk1(){
+score+=3;
+quiz();
+}
+
+function talk2(){
+score+=1;
+quiz();
+}
+
+function quiz(){
+
+document.getElementById("game").innerHTML=`
+
+<h2>第三關：文化挑戰</h2>
+
+<p>珍珠奶茶最早起源於哪裡？</p>
+
+<button onclick="correct()">台灣</button>
+
+<button onclick="wrong()">日本</button>
+
+<button onclick="wrong()">韓國</button>
+
+`;
+
+}
+
+function correct(){
+score+=3;
+ending();
+}
+
+function wrong(){
+ending();
+}
+
+function ending(){
+
+let result="";
+
+if(score>=8){
+
+result=`
+<h2>🏆 夜市文化大師</h2>
+<p>你非常了解台灣夜市文化！</p>
+`;
+
+}
+
+else if(score>=6){
+
+result=`
+<h2>🍢 美食達人</h2>
+<p>你發現了許多夜市美食。</p>
+`;
+
+}
+
+else if(score>=4){
+
+result=`
+<h2>🎒 文化探索者</h2>
+<p>你對台灣文化產生濃厚興趣。</p>
+`;
+
+}
+
+else{
+
+result=`
+<h2>😆 普通觀光客</h2>
+<p>雖然有點迷路，但玩得很開心。</p>
+`;
+
+}
+
+document.getElementById("game").innerHTML=
+result+
+`<br><button onclick="location.reload()">重新開始</button>`;
+
+}
+
 </script>
-
-</body>
-</html>
