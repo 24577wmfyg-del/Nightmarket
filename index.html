@@ -1,168 +1,106 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>台灣夜市文化冒險</title>
-
+<title>海盜港口市場</title>
 <style>
-body{
-    font-family:Arial,sans-serif;
-    background:#fff8e8;
-    text-align:center;
-    padding:20px;
-}
-
-.container{
-    max-width:800px;
-    margin:auto;
-    background:white;
-    padding:30px;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(0,0,0,0.2);
-}
-
-button{
-    background:#ff8800;
-    color:white;
-    border:none;
-    padding:12px 20px;
-    margin:10px;
-    border-radius:10px;
-    font-size:18px;
-}
-
-button:hover{
-    background:#ff6600;
-}
-
-h1{
-    color:#cc5500;
-}
+body { font-family: Arial; background:#0b1d2a; color:white; text-align:center; }
+button { margin:5px; padding:10px; cursor:pointer; }
+.box { margin-top:20px; }
 </style>
-
 </head>
+
 <body>
 
-<div class="container">
-    <h1>台灣夜市文化冒險</h1>
-
-    <div id="game">
-        <p>
-        歡迎來到台灣！你是一位來台交換學生，
-        想透過夜市了解台灣文化。
-        </p>
-
-        <button onclick="startGame()">開始冒險</button>
-    </div>
-</div>
+<h1>🏴‍☠️ 海盜港口市場</h1>
+<div id="game"></div>
 
 <script>
+const items = [
+  {name:"海盜麵包", price:10},
+  {name:"火藥桶", price:35},
+  {name:"醫療草藥", price:20},
+  {name:"船帆修補布", price:15},
+  {name:"鯊魚肉乾", price:25}
+];
 
+let round = 1;
+let maxRound = 5;
 let score = 0;
+let chosen = [];
+let total = 0;
 
-function startGame(){
-document.getElementById("game").innerHTML=`
-<h2>第一站：選擇夜市</h2>
-<button onclick="night1()">士林夜市</button>
-<button onclick="night2()">逢甲夜市</button>
-<button onclick="night3()">六合夜市</button>
-`;
+function randomEvent(){
+  const events = [
+    "🌊 海浪太大！時間緊迫",
+    "🏴‍☠️ 海盜打折日！",
+    "💰 黑市抬價！",
+    "🦜 鸚鵡搗亂！"
+  ];
+  return events[Math.floor(Math.random()*events.length)];
 }
 
-function night1(){
-score += 10;
-document.getElementById("game").innerHTML=`
-<h2>士林夜市</h2>
-<p>你看到臭豆腐和大腸包小腸。</p>
-<button onclick="food()">了解美食文化</button>
-`;
+function render(){
+  if(round > maxRound){
+    document.getElementById("game").innerHTML =
+    `<h2>🏁 遊戲結束</h2>
+     <p>你的分數：${score}</p>
+     <p>${score>=80?"☠️ 傳奇海盜":score>=50?"👍 合格船員":"💀 新手海盜"}</p>
+     <button onclick="location.reload()">再玩一次</button>`;
+    return;
+  }
+
+  chosen = [];
+  total = 0;
+
+  let html = `
+  <h2>第 ${round} 回合</h2>
+  <p>${randomEvent()}</p>
+  <p>請選 4 個商品：</p>
+  `;
+
+  items.forEach((it, i)=>{
+    html += `<button onclick="selectItem(${i})">${it.name} (${it.price})</button>`;
+  });
+
+  html += `
+  <div class="box">
+  <p>已選：${chosen.map(c=>c.name).join(", ")}</p>
+  <button onclick="check()">結算</button>
+  </div>
+  `;
+
+  document.getElementById("game").innerHTML = html;
 }
 
-function night2(){
-score += 10;
-document.getElementById("game").innerHTML=`
-<h2>逢甲夜市</h2>
-<p>你看到創意小吃與特色飲料。</p>
-<button onclick="food()">了解美食文化</button>
-`;
+function selectItem(i){
+  if(chosen.length < 4){
+    chosen.push(items[i]);
+    render();
+  }
 }
 
-function night3(){
-score += 10;
-document.getElementById("game").innerHTML=`
-<h2>六合夜市</h2>
-<p>你看到海鮮與高雄特色料理。</p>
-<button onclick="food()">了解美食文化</button>
-`;
+function check(){
+  if(chosen.length < 4){
+    alert("要選滿4個！");
+    return;
+  }
+
+  total = chosen.reduce((a,b)=>a+b.price,0);
+  let ans = prompt("輸入你的總金額：");
+
+  ans = Number(ans);
+
+  if(ans === total) score += 20;
+  else if(Math.abs(ans-total)<=5) score += 15;
+
+  alert("正確答案：" + total);
+
+  round++;
+  render();
 }
 
-function food(){
-document.getElementById("game").innerHTML=`
-<h2>文化學習</h2>
-
-<p>
-臭豆腐是台灣知名街頭小吃，
-經過發酵製作而成。
-</p>
-
-<p>
-蚵仔煎則展現台灣沿海飲食文化，
-是許多觀光客必吃的夜市料理。
-</p>
-
-<button onclick="quiz()">進行小測驗</button>
-`;
-}
-
-function quiz(){
-document.getElementById("game").innerHTML=`
-<h2>小測驗</h2>
-
-<p>臭豆腐最大的特色是什麼？</p>
-
-<button onclick="correct()">發酵製作</button>
-<button onclick="wrong()">冷凍製作</button>
-`;
-}
-
-function correct(){
-score += 20;
-ending();
-}
-
-function wrong(){
-ending();
-}
-
-function ending(){
-
-let result="";
-
-if(score>=30){
-result="夜市文化達人";
-}
-else{
-result="夜市文化新手";
-}
-
-document.getElementById("game").innerHTML=`
-<h2>遊戲結束</h2>
-
-<p>你的分數：${score}</p>
-
-<h3>${result}</h3>
-
-<p>
-恭喜完成台灣夜市文化冒險！
-透過夜市美食與文化學習，
-更了解台灣的在地特色。
-</p>
-
-<button onclick="location.reload()">重新開始</button>
-`;
-}
-
+render();
 </script>
 
 </body>
