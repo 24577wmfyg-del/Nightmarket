@@ -1,106 +1,385 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>海盜港口市場</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>尋味台灣：飲食文化探索之旅</title>
+
 <style>
-body { font-family: Arial; background:#0b1d2a; color:white; text-align:center; }
-button { margin:5px; padding:10px; cursor:pointer; }
-.box { margin-top:20px; }
+body{
+    font-family: "Microsoft JhengHei", sans-serif;
+    background:#f4f1ea;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 10px rgba(0,0,0,.2);
+}
+
+h1,h2{
+    color:#c75b12;
+}
+
+.status{
+    display:flex;
+    gap:20px;
+    margin-bottom:15px;
+    font-weight:bold;
+}
+
+button{
+    padding:10px 15px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    background:#ffb347;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#ff9f1c;
+}
+
+#inventory{
+    background:#fff7e6;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+}
+
+.note{
+    background:#e8f5e9;
+    padding:10px;
+    border-radius:10px;
+    margin-top:10px;
+}
 </style>
 </head>
 
 <body>
 
-<h1>🏴‍☠️ 海盜港口市場</h1>
+<div class="container">
+
+<h1>尋味台灣：飲食文化探索之旅</h1>
+
+<div class="status">
+<div>📅 第 <span id="day">1</span> 天</div>
+<div>⚡ 精力：<span id="energy">10</span></div>
+<div>📖 知識值：<span id="knowledge">0</span></div>
+</div>
+
 <div id="game"></div>
 
+<div id="inventory">
+<h3>🎒 背包</h3>
+<ul id="bag"></ul>
+</div>
+
+</div>
+
 <script>
-const items = [
-  {name:"海盜麵包", price:10},
-  {name:"火藥桶", price:35},
-  {name:"醫療草藥", price:20},
-  {name:"船帆修補布", price:15},
-  {name:"鯊魚肉乾", price:25}
-];
 
-let round = 1;
-let maxRound = 5;
-let score = 0;
-let chosen = [];
-let total = 0;
+let day = 1;
+let energy = 10;
+let knowledge = 0;
+let inventory = [];
 
-function randomEvent(){
-  const events = [
-    "🌊 海浪太大！時間緊迫",
-    "🏴‍☠️ 海盜打折日！",
-    "💰 黑市抬價！",
-    "🦜 鸚鵡搗亂！"
-  ];
-  return events[Math.floor(Math.random()*events.length)];
+const game = document.getElementById("game");
+
+function updateUI(){
+    document.getElementById("day").textContent = day;
+    document.getElementById("energy").textContent = energy;
+    document.getElementById("knowledge").textContent = knowledge;
+
+    const bag = document.getElementById("bag");
+    bag.innerHTML = "";
+
+    inventory.forEach(item=>{
+        const li=document.createElement("li");
+        li.textContent=item;
+        bag.appendChild(li);
+    });
 }
 
-function render(){
-  if(round > maxRound){
-    document.getElementById("game").innerHTML =
-    `<h2>🏁 遊戲結束</h2>
-     <p>你的分數：${score}</p>
-     <p>${score>=80?"☠️ 傳奇海盜":score>=50?"👍 合格船員":"💀 新手海盜"}</p>
-     <button onclick="location.reload()">再玩一次</button>`;
+function startGame(){
+    game.innerHTML=`
+    <h2>故事開始</h2>
+
+    <p>
+    你是一位從小在都市長大的年輕人。
+    回到阿公居住的鄉下後，
+    開始重新認識台灣飲食文化。
+    </p>
+
+    <p>
+    阿公告訴你：
+    「想認識一個地方，就先認識它的食物。」
+    </p>
+
+    <button onclick="home()">開始旅程</button>
+    `;
+}
+
+function home(){
+
+if(energy<=0){
+    nightJournal();
     return;
-  }
-
-  chosen = [];
-  total = 0;
-
-  let html = `
-  <h2>第 ${round} 回合</h2>
-  <p>${randomEvent()}</p>
-  <p>請選 4 個商品：</p>
-  `;
-
-  items.forEach((it, i)=>{
-    html += `<button onclick="selectItem(${i})">${it.name} (${it.price})</button>`;
-  });
-
-  html += `
-  <div class="box">
-  <p>已選：${chosen.map(c=>c.name).join(", ")}</p>
-  <button onclick="check()">結算</button>
-  </div>
-  `;
-
-  document.getElementById("game").innerHTML = html;
 }
 
-function selectItem(i){
-  if(chosen.length < 4){
-    chosen.push(items[i]);
-    render();
-  }
+game.innerHTML=`
+<h2>今天要去哪裡？</h2>
+
+<button onclick="market()">傳統市場</button>
+<button onclick="nightMarket()">廟口夜市</button>
+<button onclick="oldStreet()">老街</button>
+<button onclick="port()">海鮮港口</button>
+`;
 }
 
-function check(){
-  if(chosen.length < 4){
-    alert("要選滿4個！");
+function market(){
+
+energy-=3;
+
+game.innerHTML=`
+<h2>傳統市場</h2>
+
+<p>菜販阿姨拿起一把蔬菜問你：</p>
+
+<p>「這是什麼菜？」</p>
+
+<button onclick="marketCorrect()">空心菜</button>
+<button onclick="marketWrong()">高麗菜</button>
+`;
+
+updateUI();
+}
+
+function marketCorrect(){
+knowledge+=2;
+inventory.push("空心菜");
+
+game.innerHTML=`
+<h2>答對了！</h2>
+
+<p>空心菜是台灣常見家常菜。</p>
+
+<button onclick="home()">返回</button>
+`;
+
+updateUI();
+}
+
+function marketWrong(){
+game.innerHTML=`
+<h2>答錯了</h2>
+
+<p>正確答案是空心菜。</p>
+
+<button onclick="home()">返回</button>
+`;
+}
+
+function nightMarket(){
+
+energy-=3;
+
+game.innerHTML=`
+<h2>廟口夜市</h2>
+
+<p>蚵仔煎中的蚵仔是什麼？</p>
+
+<button onclick="nightCorrect()">牡蠣</button>
+<button onclick="nightWrong()">蝦子</button>
+`;
+
+updateUI();
+}
+
+function nightCorrect(){
+
+knowledge+=2;
+inventory.push("牡蠣");
+
+game.innerHTML=`
+<h2>答對了！</h2>
+
+<p>蚵仔就是牡蠣。</p>
+
+<button onclick="home()">返回</button>
+`;
+
+updateUI();
+}
+
+function nightWrong(){
+game.innerHTML=`
+<h2>答錯了</h2>
+
+<p>蚵仔其實是牡蠣。</p>
+
+<button onclick="home()">返回</button>
+`;
+}
+
+function oldStreet(){
+
+energy-=2;
+
+game.innerHTML=`
+<h2>老街</h2>
+
+<p>鳳梨酥主要使用哪種水果？</p>
+
+<button onclick="oldCorrect()">鳳梨</button>
+<button onclick="oldWrong()">蘋果</button>
+`;
+
+updateUI();
+}
+
+function oldCorrect(){
+
+knowledge+=2;
+inventory.push("鳳梨");
+
+game.innerHTML=`
+<h2>答對了！</h2>
+
+<p>鳳梨酥是台灣知名伴手禮。</p>
+
+<button onclick="home()">返回</button>
+`;
+
+updateUI();
+}
+
+function oldWrong(){
+game.innerHTML=`
+<h2>答錯了</h2>
+
+<p>答案是鳳梨。</p>
+
+<button onclick="home()">返回</button>
+`;
+}
+
+function port(){
+
+energy-=2;
+
+game.innerHTML=`
+<h2>海鮮港口</h2>
+
+<p>虱目魚最有名的產地是哪裡？</p>
+
+<button onclick="portCorrect()">台南</button>
+<button onclick="portWrong()">南投</button>
+`;
+
+updateUI();
+}
+
+function portCorrect(){
+
+knowledge+=2;
+inventory.push("虱目魚");
+
+game.innerHTML=`
+<h2>答對了！</h2>
+
+<p>台南是虱目魚的重要產地。</p>
+
+<button onclick="home()">返回</button>
+`;
+
+updateUI();
+}
+
+function portWrong(){
+game.innerHTML=`
+<h2>答錯了</h2>
+
+<p>答案是台南。</p>
+
+<button onclick="home()">返回</button>
+`;
+}
+
+function nightJournal(){
+
+game.innerHTML=`
+<h2>📒 子彈筆記</h2>
+
+<div class="note">
+今天學到：
+
+<ul>
+<li>台灣市場文化</li>
+<li>夜市特色小吃</li>
+<li>老街傳統糕點</li>
+<li>漁港海鮮文化</li>
+</ul>
+</div>
+
+<button onclick="nextDay()">睡覺</button>
+`;
+}
+
+function nextDay(){
+
+day++;
+
+if(day>5){
+    ending();
     return;
-  }
-
-  total = chosen.reduce((a,b)=>a+b.price,0);
-  let ans = prompt("輸入你的總金額：");
-
-  ans = Number(ans);
-
-  if(ans === total) score += 20;
-  else if(Math.abs(ans-total)<=5) score += 15;
-
-  alert("正確答案：" + total);
-
-  round++;
-  render();
 }
 
-render();
+energy=10;
+
+home();
+
+updateUI();
+}
+
+function ending(){
+
+let title="文化新手";
+
+if(knowledge>=30){
+title="飲食文化傳承者";
+}
+else if(knowledge>=15){
+title="台灣美食探索家";
+}
+
+game.innerHTML=`
+<h2>🎉 遊戲結局</h2>
+
+<h3>${title}</h3>
+
+<p>最終知識值：${knowledge}</p>
+
+<p>
+透過五天的探索，
+你逐漸了解台灣飲食文化與地方特色。
+</p>
+
+<button onclick="location.reload()">
+重新開始
+</button>
+`;
+}
+
+updateUI();
+startGame();
+
 </script>
 
 </body>
